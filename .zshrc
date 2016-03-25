@@ -1,21 +1,16 @@
+
 # Path to your oh-my-zsh installation.
   export ZSH=/root/.oh-my-zsh
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-ZSH_THEME="robbyrussell"
-
 # Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+  CASE_SENSITIVE="false"
 
 # Uncomment the following line to use hyphen-insensitive completion. Case
 # sensitive completion must be off. _ and - will be interchangeable.
 # HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
-#  DISABLE_AUTO_UPDATE="true"
+# DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
 # export UPDATE_ZSH_DAYS=13
@@ -27,7 +22,7 @@ ZSH_THEME="robbyrussell"
   DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-  ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # COMPLETION_WAITING_DOTS="true"
@@ -49,12 +44,14 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-# plugins=(git)
+
+  plugins=(dirhistory sublime)
 
 # User configuration
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
-source $ZSH/oh-my-zsh.sh
+  source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -75,22 +72,58 @@ source $ZSH/oh-my-zsh.sh
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
 #
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-alias zshrc='. ~/.zshrc'
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+
+# ZSH_THEME="robbyrussell"
+
+#wezm
+#theunraveler
+#sunaku
+#blinks
+#kardan
+#philips
+#sunrise
+#bureau
+
+#avit   black background
+
+
+#set history size
+export HISTSIZE=1000
+
+#save history after logout
+export SAVEHIST=1000
+
+#history file
+export HISTFILE=~/.zhistory
+
+#append into history file
+setopt INC_APPEND_HISTORY
+
+#save only one command if 2 common are same and consistent
+setopt HIST_IGNORE_DUPS
+
+#add timestamp for each entry
+#setopt EXTENDED_HISTORY 
+
+# Appends every command to the history file once it is executed
+setopt inc_append_history
+# Reloads the history whenever you use it
+setopt share_history
+
+alias zshrc='gedit ~/.zshrc'
 alias shrc='. ~/.zshrc'
 alias vimrc='gvim ~/.vimrc'
 
 alias grep='grep --color=auto -i'
-
-alias ..='cd ..'
-alias ...='cd ../../../'
-alias ....='cd ../../../../'
-alias .....='cd ../../../../'
 
 alias history='history | less'
 alias hh='history | grep '
@@ -132,6 +165,22 @@ alias lll='ls -A | less'
 alias lcol='ls -ghA --group-directories-first| less'
 alias dirfirst='ls -ghA --group-directories-first'
 
+function jcurl() {
+	# $@ - accepts several variables
+    curl "$@" | json | pygmentize -l json
+}
+#export -f jcurl
+
+#function auth-jcurl() {
+#    curl -H "Accept: application/json" -H "Content-Type: application/json" -H "X-User-Email: $1" -H "X-User-Token: $2" ${@:3} | json | pygmentize -l json
+#}
+#export -f auth-jcurl
+
+#${@:3} is the array of command line arguments minus the first 2, (because we’ve already used them with $1 and $2).
+#We can now pass the username and access token to cURL and any additional options (which will be picked up by “$@”)
+
+#$ auth-jcurl name@example.com a4pQnAiprk6-qczS3rn6 http://localhost:3000/api/v1/exercises
+
 straceproc() {
 strace -t -p pid $1 -o $1.txt
 }
@@ -146,10 +195,18 @@ mm() {
 } 
 
 mm5() {
+   man $1 | grep  $2 -i -A 5 -B 5"
+}
+
+mm5s() {
    man $1 | grep  $2 -i -A 5 -B 5 | sed -e "s/[[:space:]]\+/ /g"
 }
 
 mm20() {
+   man $1 | grep  $2 -i -A20 -B 20"
+}
+
+mm20s() {
    man $1 | grep  $2 -i -A20 -B 20 | sed -e "s/[[:space:]]\+/ /g"
 }
 
