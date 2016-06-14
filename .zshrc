@@ -1,4 +1,3 @@
-
 # Path to your oh-my-zsh installation.
   export ZSH=/root/.oh-my-zsh
 
@@ -47,8 +46,6 @@
 
   plugins=(dirhistory sublime)
 
-# User configuration
-
 # export MANPATH="/usr/local/man:$MANPATH"
 
   source $ZSH/oh-my-zsh.sh
@@ -56,31 +53,11 @@
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
 
 # ZSH_THEME="robbyrussell"
 
@@ -92,9 +69,7 @@
 #philips
 #sunrise
 #bureau
-
 #avit   black background
-
 
 #set history size
 export HISTSIZE=1000
@@ -119,11 +94,31 @@ setopt inc_append_history
 # Reloads the history whenever you use it
 setopt share_history
 
-alias zshrc='gedit ~/.zshrc'
-alias shrc='. ~/.zshrc'
-alias vimrc='gvim ~/.vimrc'
+#set vim editing mode
+set -o vi
 
+alias zshrc='vim ~/.zshrc'
+alias shrc='. ~/.zshrc'
+alias vimrc='vim ~/.vimrc'
+alias tmuxrc='vim ~/.tmux.conf'
+alias makerc='vim Makefile'
+
+alias tmuxattach="tmux attach"
+alias tmuxnew='tmux new -s'
+alias tmuxattach-or-create='tmux new-session -A -s main'
+
+alias rebuild='make rebuild'
+alias clean='make clean'
+alias maker='make target && ./target'
+alias rebuildr='rebuild target && ./target'
+alias make='make -j8'
 alias grep='grep --color=auto -i'
+alias grepword='grep -wHR $1 . 2>/dev/null'
+
+alias findCPP='find . -regex ".*\.\(c\|cc\|cpp\|cp\|cxx\|c++\|h\|hh\|hpp\|hxx\)"'
+alias uncomment='awk "!( NR<20 && !/^[[:blank:]]*#.*)/ && /^[[:blank:]]*($|[/].*)/)"' 
+alias uncommentALL='find . -regex ".*\.\(c\|cc\|cpp\|cp\|cxx\|c++\|h\|hh\|hpp\|hxx\)" \
+    -exec awk -i inplace "!( NR<20 && !/^[[:blank:]]*#.*)/ && /^[[:blank:]]*($|[/].*)/)"  {} \;'
 
 alias history='history | less'
 alias hh='history | grep '
@@ -143,16 +138,21 @@ alias instal='apt-get install'
 alias instals='apt-get -s install'
 alias removes='apt-get -s remove'
 
-alias kilfox='killall -9 x-www-browser'
-alias kilpl='killall -9 gnome-mplayer'
-
 alias kil='killall'
+alias kilfox='kil -2 x-www-browser'
+alias kilpl='kil -2 gnome-mplayer'
+alias kilcode='kil -2 codelite'
+
+
 alias gamma='xgamma -gamma'
 
 alias ccat='pygmentize -g'
 
 pid() {
 ps -C $1 -o pid=
+}
+mytty(){
+tty | sed -e "s/.*tty\(.*\)/\1/".
 }
 
 timer() {
@@ -165,21 +165,6 @@ alias lll='ls -A | less'
 alias lcol='ls -ghA --group-directories-first| less'
 alias dirfirst='ls -ghA --group-directories-first'
 
-function jcurl() {
-	# $@ - accepts several variables
-    curl "$@" | json | pygmentize -l json
-}
-#export -f jcurl
-
-#function auth-jcurl() {
-#    curl -H "Accept: application/json" -H "Content-Type: application/json" -H "X-User-Email: $1" -H "X-User-Token: $2" ${@:3} | json | pygmentize -l json
-#}
-#export -f auth-jcurl
-
-#${@:3} is the array of command line arguments minus the first 2, (because we’ve already used them with $1 and $2).
-#We can now pass the username and access token to cURL and any additional options (which will be picked up by “$@”)
-
-#$ auth-jcurl name@example.com a4pQnAiprk6-qczS3rn6 http://localhost:3000/api/v1/exercises
 
 straceproc() {
 strace -t -p pid $1 -o $1.txt
@@ -190,12 +175,30 @@ pidForGdb="pid $1"
 gdb --pid=pidForGdb
 }
 
+gg5() {
+grep  $1 -i -A 5 -B 5
+}
+
+gg5s() {
+grep  $1 -i -A 5 -B 5 | sed -e "s/[[:space:]]\+/ /g"
+}
+
+gg20() {
+grep  $1 -i -A20 -B 20
+}
+
+gg20s() {
+grep  $1 -i -A20 -B 20 | sed -e "s/[[:space:]]\+/ /g"
+}
+
+
 mm() {
    man $1 | grep  $2 -i -n
 } 
 
+
 mm5() {
-   man $1 | grep  $2 -i -A 5 -B 5"
+   man $1 | grep  $2 -i -A 5 -B 5
 }
 
 mm5s() {
@@ -203,7 +206,7 @@ mm5s() {
 }
 
 mm20() {
-   man $1 | grep  $2 -i -A20 -B 20"
+   man $1 | grep  $2 -i -A20 -B 20
 }
 
 mm20s() {
@@ -353,14 +356,31 @@ alias ii='ifconfig -a'
 sstart() { 
 service $1 start
 }
-
 sstop() { 
 service $1 stop
 }
 
-alias startcapitan='vmrun start /root/vmware/Clone\ of\ OS\ X\ El\ Capitan/Clone\ of\ OS\ X\ El\ Capitan.vmx'
-alias fixvm='modprobe vmmon && modprobe vmw_vmci && modprobe vmnet && vmware-networks --start'
+#function jcurl() {
+#	# $@ - accepts several variables
+#    curl "$@" | json | pygmentize -l json
+#}
 
+#export -f jcurl
+
+#function auth-jcurl() {
+#    curl -H "Accept: application/json" -H "Content-Type: application/json" -H "X-User-Email: $1" -H "X-User-Token: $2" ${@:#3} | json | pygmentize -l json
+#}
+#export -f auth-jcurl
+
+#${@:3} is the array of command line arguments minus the first 2, (because we’ve already used them with $1 and $2).
+
+#We can now pass the username and access token to cURL and any additional options (which will be picked up by “$@”)
+
+#$ auth-jcurl name@example.com a4pQnAiprk6-qczS3rn6 http://localhost:3000/api/v1/exercises
+
+
+#alias fixvm='modprobe vmmon && modprobe vmw_vmci && modprobe vmnet && vmware-networks --start'
+alias fixvm='vmware-modconfig --console --install-all'
 # shortcut  for iptables and pass it via sudo#
 #alias ipt='sudo /sbin/iptables'
  
@@ -433,3 +453,5 @@ fi
 
 #check most used commands 
 #history | awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n10
+
+                      
