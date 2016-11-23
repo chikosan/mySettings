@@ -1,31 +1,35 @@
 #!/bin/bash
-shopt -s nullglob
+
+# shopt -s nullglob
 shopt -s nocasematch
 
-read -p "please enter your ip:" ipinput
-ssh -o strictHostKeyChecking=no $ipnput -l root <<HERE
-main
-HERE
+veros=$( grep 'release' /etc/*release | grep release | cut -d " " -f4 | uniq )
+#read -p "please enter your ip:" ipinput
+#ssh -o StrictHostKeyChecking=no $ipnput -l root "main"
 
 vminstall() {
-wget http://10.1.8.47/VmwareTools10.0.9.tar.gz -P /tmp/vm-tools
-tar -zxvf /tmp/vmware-tools/VmwareTools10.0.9.tar.gz -C /tmp/vm-tools
-cd /tmp/vm-tools/vmware-tools-distrib/
-./vmware-install.pl -d
-rm -Rf /tmp/vm-tools
+echo ps >> /tmp/ps.tmp
+# wget http://10.1.8.47/VmwareTools10.0.9.tar.gz -P /tmp/vm-tools
+# tar -zxvf /tmp/vmware-tools/VmwareTools10.0.9.tar.gz -C /tmp/vm-tools
+# cd /tmp/vm-tools/vmware-tools-distrib/
+# ./vmware-install.pl -d
+# rm -Rf /tmp/vm-tools
 }
 
 main() {
 
-if grep -q 'centos\|ubuntu\|redhat' /etc/*release 1>/dev/null; then
+if [ "$veros" -ge "7" ]; then
  if service vmware-tools status | grep run 1>/dev/null; then
- vmware-uninstall-tools.pl &&
- vminstall
+# vmware-uninstall-tools.pl &&
+# vminstall
+ echo "os version more then 7" >> /etc/ver.os
  else
- vminsatll
+#  vminsatll
+ echo "ELSE version more then 7" >> /tmp/ver.os
  fi
 else
 echo "it not a linux machhine"
 exit 1
 fi
 }
+main
