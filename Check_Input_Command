@@ -1,0 +1,25 @@
+#!/bin/bash
+# Script to determine if the input string is command,alias,or file #
+
+echo -n "please insert your command:"
+read cm
+
+lscm=$(ls)
+typecm=$(type $cm 2>/dev/null)
+
+if [ $? -eq  0 ]; then
+ echo "RunBit" $?
+ if [ "$typecm" == *"aliased"* ]; then
+   echo "the command $cm is Alias"
+  elas
+   echo "the command $cm is program"
+ fi
+
+else
+
+ if [[ $lscm == *"$cm"* ]]; then
+  echo "the string - $cm  is a file in this directory"
+ else
+  echo "you worte stupid things"
+ fi
+fi
